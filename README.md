@@ -23,7 +23,7 @@ This project is a sample matchmaking app built using **Clean Architecture** and 
   - If internet **is available**, actions are synced **instantly** to the server.
 
 - 🔄 **Background Syncing**  
-  Sync operations are handled with **WorkManager**, which ensures reliability even in Doze mode or after a device reboot.
+  Sync operations are handled with **WorkManager**
 
 - 🎞 **Lottie Loader**  
   Displays a Lottie-based animation while the user data is loading.
