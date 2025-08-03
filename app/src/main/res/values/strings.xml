@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ShaadiAassignment</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="dislike">Dislike</string>
+    <string name="like">Like</string>
+    <string name="discover_matches">❤️ Discover Matches</string>
+</resources>
