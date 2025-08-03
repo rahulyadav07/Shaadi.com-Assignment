@@ -24,6 +24,11 @@ This project is a sample matchmaking app built using **Clean Architecture** and 
 
 - 🔄 **Background Syncing**  
   Sync operations are handled with **WorkManager**
+  
+
+- 📷 **Image Loading with Glide**
+  - Shows a **Shaadi placeholder** while the image is loading  
+  - Displays a **broken heart icon** if the image fails to load
 
 - 🎞 **Lottie Loader**  
   Displays a Lottie-based animation while the user data is loading.
