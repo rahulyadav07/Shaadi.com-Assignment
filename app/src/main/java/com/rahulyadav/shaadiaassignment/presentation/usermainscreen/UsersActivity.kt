@@ -6,13 +6,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rahulyadav.shaadiaassignment.core.utils.gone
 import com.rahulyadav.shaadiaassignment.core.utils.show
 import com.rahulyadav.shaadiaassignment.core.wrapper.Resource
 import com.rahulyadav.shaadiaassignment.databinding.ActivityUsersBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,8 +67,7 @@ class UsersActivity : FragmentActivity() {
                         binding.loading.root.gone()
 
                         val users = resource.data
-
-                        usersAdapter.submitList(users)
+                        usersAdapter.submitData(users)
                     }
 
                     is Resource.Error -> {

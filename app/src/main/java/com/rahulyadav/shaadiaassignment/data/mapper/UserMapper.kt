@@ -25,7 +25,7 @@ fun UserEntity.toDomain(): User {
         email = email,
         name = "".plus(firstName).plus(lastName),
         imageUrl = imageUrl,
-        address = streetNumber.toString().plus(streetName).plus(city).plus(state).plus(country),
+        address = "$streetNumber $streetName $city $state $country",
         matchState = matchAction
     )
 }

@@ -1,49 +1,53 @@
 package com.rahulyadav.shaadiaassignment.presentation.usermainscreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.rahulyadav.shaadiaassignment.core.wrapper.Resource
 import com.rahulyadav.shaadiaassignment.domain.entity.MatchState
 import com.rahulyadav.shaadiaassignment.domain.entity.User
-import com.rahulyadav.shaadiaassignment.domain.repositoryinterface.UserRepository
+import com.rahulyadav.shaadiaassignment.domain.usecase.GetUserListUseCase
+import com.rahulyadav.shaadiaassignment.domain.usecase.MatchSyncUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class UsersViewModel @Inject constructor(
-    private val repository: UserRepository
+    private val getUserListUseCase: GetUserListUseCase,
+    private val getMatchSyncUseCase: MatchSyncUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<Resource<List<User>>>(Resource.Loading)
-    val state: StateFlow<Resource<List<User>>> = _state
+
+    private val _state = MutableStateFlow<Resource<PagingData<User>>>(Resource.Loading)
+    val state: StateFlow<Resource<PagingData<User>>> = _state
+
 
     init {
-        getUsers()
+        fetchPagedUsers()
     }
 
-    private fun getUsers() {
+    private fun fetchPagedUsers() {
         viewModelScope.launch {
-            _state.value = Resource.Loading
-            val result = repository.getUserListData()
-            _state.value = result
+            getUserListUseCase()
+                .collectLatest { result ->
+                    _state.value = result
+                }
         }
     }
 
-
     fun onUserLiked(user: User) {
         viewModelScope.launch {
-            repository.userAction(user.email, MatchState.ACCEPTED.value)
+            getMatchSyncUseCase(user.email, MatchState.ACCEPTED.value)
         }
     }
 
     fun onUserDisliked(user: User) {
         viewModelScope.launch {
-            repository.userAction(user.email, MatchState.DECLINED.value)
+            getMatchSyncUseCase(user.email, MatchState.DECLINED.value)
         }
     }
 

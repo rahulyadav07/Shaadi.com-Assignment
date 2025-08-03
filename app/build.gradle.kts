@@ -53,6 +53,7 @@ dependencies {
 
     implementation(libs.hilt.android)
    ksp(libs.hilt.compiler)
+    implementation ("androidx.hilt:hilt-work:1.2.0")
 
 
     //room
@@ -68,4 +69,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
 
     implementation("com.airbnb.android:lottie:6.3.0")
+
+    implementation("androidx.paging:paging-runtime:3.3.6")
+
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }

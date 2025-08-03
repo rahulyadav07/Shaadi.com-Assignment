@@ -1,7 +1,6 @@
 package com.rahulyadav.shaadiaassignment.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.rahulyadav.shaadiaassignment.domain.entity.MatchState
 
 
 data class UserDto(
