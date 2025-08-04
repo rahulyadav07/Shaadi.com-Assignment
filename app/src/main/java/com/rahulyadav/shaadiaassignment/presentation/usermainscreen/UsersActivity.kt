@@ -6,12 +6,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rahulyadav.shaadiaassignment.core.utils.gone
 import com.rahulyadav.shaadiaassignment.core.utils.show
 import com.rahulyadav.shaadiaassignment.core.wrapper.Resource
 import com.rahulyadav.shaadiaassignment.databinding.ActivityUsersBinding
+import com.rahulyadav.shaadiaassignment.domain.entity.MatchState
+import com.rahulyadav.shaadiaassignment.work.MatchSyncWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,12 +45,24 @@ class UsersActivity : FragmentActivity() {
             layoutManager = LinearLayoutManager(this@UsersActivity, LinearLayoutManager.VERTICAL, false)
         }
 
-        usersAdapter.onLikeClicked  = {user->
+        usersAdapter.onLikeClicked  = {user, pos->
             viewModel.onUserLiked(user)
+            usersAdapter.peek(pos)?.let {
+                val updatedUser = it.copy(matchState = MatchState.ACCEPTED.value)
+                val newList = usersAdapter.snapshot().items.toMutableList()
+                newList[pos] = updatedUser
+                usersAdapter.submitData(lifecycle, PagingData.from(newList))
+            }
         }
 
-        usersAdapter.onDislikeClicked = {user->
+        usersAdapter.onDislikeClicked = {user, pos->
             viewModel.onUserDisliked(user)
+            usersAdapter.peek(pos)?.let {
+                val updatedUser = it.copy(matchState = MatchState.DECLINED.value)
+                val newList = usersAdapter.snapshot().items.toMutableList()
+                newList[pos] = updatedUser
+                usersAdapter.submitData(lifecycle, PagingData.from(newList))
+            }
         }
 
 

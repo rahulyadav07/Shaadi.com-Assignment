@@ -48,7 +48,7 @@ class UserRepositoryImp @Inject constructor(
         }
         else {
 
-            userDao.updateMatchAction(email, action, false)
+            userDao.updateMatchAction(email, action, true) //  it will false i am just adding to simulate the behaviour
         }
     }
 }

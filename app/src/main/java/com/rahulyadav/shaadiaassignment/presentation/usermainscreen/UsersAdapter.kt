@@ -16,11 +16,10 @@ import com.rahulyadav.shaadiaassignment.domain.entity.User
 import javax.inject.Inject
 
 
-class UsersAdapter @Inject constructor() :
-    PagingDataAdapter<User, UsersAdapter.UserViewHolder>(UserDiffCallback()) {
+class UsersAdapter @Inject constructor() : PagingDataAdapter<User, UsersAdapter.UserViewHolder>(UserDiffCallback()) {
 
-    var onLikeClicked: ((User) -> Unit)? = null
-    var onDislikeClicked: ((User) -> Unit)? = null
+    var onLikeClicked: ((User, Int) -> Unit)? = null
+    var onDislikeClicked: ((User, Int) -> Unit)? = null
 
     inner class UserViewHolder(val binding: UserItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -42,14 +41,14 @@ class UsersAdapter @Inject constructor() :
             setVisibiltyOfButton(!isMatchStatusVisible)
 
             buttonLike.setOnClickListener {
-                onLikeClicked?.invoke(user)
+                onLikeClicked?.invoke(user, position)
                 setVisibiltyOfButton(false)
                 matchStatus.setMatchStateTextAndBackground(MatchState.ACCEPTED.value)
                 matchStatus.show()
             }
 
             buttonDislike.setOnClickListener {
-                onDislikeClicked?.invoke(user)
+                onDislikeClicked?.invoke(user, position)
                 setVisibiltyOfButton(false)
                 matchStatus.setMatchStateTextAndBackground(MatchState.DECLINED.value)
                 matchStatus.show()
