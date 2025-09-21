@@ -1,0 +1,62 @@
+name: Android CI - macOS Debug Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+env:
+  APP_MODULE: app
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: macos-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: macos-gradle-
+
+      - name: Show Gradle (diagnostic)
+        run: ./gradlew -v
+
+      # Optional: install Android SDK components on mac if needed (see next section)
+      - name: Install Android SDK (optional)
+        run: |
+          if command -v sdkmanager >/dev/null 2>&1; then
+            yes | sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+          else
+            echo "sdkmanager not installed on runner; skip. If build fails, enable a full SDK install."
+          fi
+
+      - name: Build debug APK (PRs/main)
+        run: ./gradlew :${{ env.APP_MODULE }}:assembleDebug --no-daemon --stacktrace
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build-artifacts-macos
+          path: |
+            ${{ env.APP_MODULE }}/build/outputs/**/*.apk

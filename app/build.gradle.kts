@@ -1,3 +1,6 @@
+import io.netty.util.ReferenceCountUtil.release
+import org.gradle.kotlin.dsl.release
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -19,7 +22,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
+
     buildTypes {
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -27,7 +33,23 @@ android {
                 "proguard-rules.pro"
             )
         }
+        getByName("debug") {
+            isMinifyEnabled = true
+            isDebuggable = true
+        }
     }
+   signingConfigs {
+
+       maybeCreate("release").apply {
+           val storePath = System.getenv("CI_KEYSTORE_PATH") ?: "keystore.jks"
+           storeFile = file(storePath)
+           storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
+           keyAlias = System.getenv("KEY_ALIAS") ?: ""
+           keyPassword = System.getenv("KEY_PASSWORD") ?: ""
+       }
+   }
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
