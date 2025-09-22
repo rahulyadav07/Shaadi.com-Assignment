@@ -41,3 +41,47 @@ jobs:
         with:
           name: unit-test-reports
           path: app/build/reports/
+
+  package:
+    needs: [ unit-test ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4   # ✅ fixed (was action/...)
+
+      - name: set up jdk
+        run: action/setup-java@v4
+        with:
+          java-version: 1.8
+
+      - name: Build Debug APK
+        run: ./gradlew app:assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+
+
+
+
+#  static-code-analysis:
+#    needs: [ unit-test ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout the code
+#        uses: action/checkout@v4
+#
+#      - name: set up JDK 11
+#        uses: action/setup-java@v1
+#        with:
+#          java-version: 11
+#
+#      - name: Sonar Cloud Scan
+#        run: ./gradlew app:sonarqube-Dsonar.login=${{secrets.SONAR_TOKEN }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN
+
+
