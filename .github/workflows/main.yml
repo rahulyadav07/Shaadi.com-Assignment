@@ -1,11 +1,12 @@
+# This is a basic workflow to help you get started with Actions
 name: Rahul
 
+# Controls when the action will run
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
   workflow_dispatch:
 
 jobs:
@@ -13,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: action/checkout@v2
-      - name: Run a one line script
-        run:
-          echo Hello World!
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: Run a multiLine scipt
-        run:
-          echo add other action to build!
-          echo test,, and deploy your project.
+      - name: Run a one-line script
+        run: echo "Hello World!"
 
+      - name: Run a multi-line script
+        run: |
+          echo "add other action to build!"
+          echo "test, and deploy your project."
