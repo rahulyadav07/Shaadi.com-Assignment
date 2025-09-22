@@ -22,7 +22,7 @@ jobs:
         run: ./gradlew lintDebug
 
       - name : Upload html test report
-        uses: action/upload-artifact@v2
+        uses: action/upload-artifact@v3
         with:
           name: index.html
           path: app/build/report/lint-result-debug.html
