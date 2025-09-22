@@ -10,17 +10,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+
+  lint:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Run a one-line script
-        run: echo "Hello World!"
+      - name: Run Lint
+        run: ./gradlew lintDebug
 
-      - name: Run a multi-line script
-        run: |
-          echo "add other action to build!"
-          echo "test, and deploy your project."
+      - name : Upload html test report
+        uses: action/upload-artifact@v2
+        with:
+          name: index.html
+          path: app/build/report/lint-result-debug.html
