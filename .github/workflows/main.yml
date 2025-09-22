@@ -1,7 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 name: Rahul
 
-# Controls when the action will run
 on:
   push:
     branches: [ main ]
@@ -15,29 +14,30 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4   # latest checkout
+        uses: actions/checkout@v4   # ✅ correct
 
       - name: Run Lint
         run: ./gradlew lintDebug
 
-      - name: Upload html test report
-        uses: actions/upload-artifact@v4   # new stable version
+      - name: Upload lint reports
+        uses: actions/upload-artifact@v4   # ✅ correct
         with:
-          name: lint-report.html
-          path: app/build/reports/lint-results-debug.html
+          name: lint-reports
+          path: app/build/reports/
 
   unit-test:
     needs: [ lint ]
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout the code
-        uses: action/checkout@v4
+        uses: actions/checkout@v4   # ✅ fixed (was action/...)
 
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
-      - name: Upload unit test report
-        uses: action/upload-artifact@v4
+      - name: Upload unit test reports
+        uses: actions/upload-artifact@v4   # ✅ fixed (was action/...)
         with:
-          name: unit_test_report
+          name: unit-test-reports
           path: app/build/reports/
