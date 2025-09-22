@@ -23,5 +23,21 @@ jobs:
       - name: Upload html test report
         uses: actions/upload-artifact@v4   # new stable version
         with:
-          name: lint-report
+          name: lint-report.html
           path: app/build/reports/lint-results-debug.html
+
+  unit-test:
+    needs: [ lint ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: action/checkout@v4
+
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Upload unit test report
+        uses: action/upload-artifact@v4
+        with:
+          name: unit_test_report
+          path: app/build/reports/unit_test_report.html
